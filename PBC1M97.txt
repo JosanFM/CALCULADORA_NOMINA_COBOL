@@ -1,0 +1,64 @@
+      *----------------------------------------------------------------*
+       IDENTIFICATION DIVISION.
+      *----------------------------------------------------------------*
+       PROGRAM-ID. PBC1M99.
+       AUTHOR. JAVIER BEUZON.
+      *
+      * Módulo de cálculo de la letra de un DNI
+      *----------------------------------------------------------------*
+       ENVIRONMENT DIVISION.
+      *----------------------------------------------------------------*
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+      *
+      *----------------------------------------------------------------*
+       DATA DIVISION.
+      *----------------------------------------------------------------*
+       FILE SECTION.
+       WORKING-STORAGE SECTION.
+       01 NOMBRE-EMPLEADO      PIC A(30).
+       01 SALARIO-BASE         PIC 9(6)V99.
+       01 NUMERO-HIJOS         PIC 9(2).
+       01 PLUS-HIJO            PIC 9(4)V99 VALUE 50.00.
+       01 RETENCION-IRPF       PIC 9(2)V99 VALUE 15.00.
+       01 TOTAL-PLUS           PIC 9(6)V99 VALUE 0.
+       01 SALARIO-BRUTO        PIC 9(7)V99 VALUE 0.
+       01 IMPORTE-IRPF         PIC 9(7)V99 VALUE 0.
+       01 SALARIO-NETO         PIC 9(7)V99 VALUE 0.
+       01 RESPUESTA            PIC X VALUE 'S'.
+
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           PERFORM UNTIL RESPUESTA NOT = 'S'
+           DISPLAY "==============================="
+           DISPLAY "   CALCULADORA DE NOMINAS BASICA   "
+           DISPLAY "==============================="
+           DISPLAY "Ingrese el nombre del empleado: "
+           ACCEPT NOMBRE-EMPLEADO
+           DISPLAY "Ingrese el salario base (ej: 1200.50): "
+           ACCEPT SALARIO-BASE
+           DISPLAY "Ingrese el numero de hijos: "
+           ACCEPT NUMERO-HIJOS
+
+           COMPUTE TOTAL-PLUS = NUMERO-HIJOS * PLUS-HIJO
+           COMPUTE SALARIO-BRUTO = SALARIO-BASE + TOTAL-PLUS
+           COMPUTE IMPORTE-IRPF = (SALARIO-BRUTO * RETENCION-IRPF) / 100
+           COMPUTE SALARIO-NETO = SALARIO-BRUTO - IMPORTE-IRPF
+
+           DISPLAY "--------------------------------"
+           DISPLAY "Resumen de la nomina:"
+           DISPLAY "Empleado: " NOMBRE-EMPLEADO
+           DISPLAY "Salario base: " SALARIO-BASE
+           DISPLAY "Plus por hijos: " TOTAL-PLUS
+           DISPLAY "Retencion IRPF (" RETENCION-IRPF "%): " IMPORTE-IRPF
+           DISPLAY "Salario neto: " SALARIO-NETO
+           DISPLAY "--------------------------------"
+           DISPLAY "Desea calcular otra nomina? (S/N): "
+           ACCEPT RESPUESTA
+           MOVE FUNCTION UPPER-CASE(RESPUESTA) TO RESPUESTA
+
+       END-PERFORM.
+           DISPLAY "Gracias por usar la calculadora de nominas!"
+       STOP RUN.
